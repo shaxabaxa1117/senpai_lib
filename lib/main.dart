@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:senpai_lib/config/theme/main_theme.dart';
+import 'package:senpai_lib/feature/anime/presentation/pages/anime_list_page.dart';
+import 'package:senpai_lib/injection_container.dart';
 
-void main() {
+void main() async{
+   initializeDependecies();
   runApp(const MyApp());
 }
 
@@ -11,11 +15,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: Placeholder(),
+      theme: mainTheme,
+      home: AnimeListPage(),
     );
   }
 }
