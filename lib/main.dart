@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:senpai_lib/config/theme/main_theme.dart';
-import 'package:senpai_lib/feature/anime/presentation/pages/anime_list_page.dart';
 import 'package:senpai_lib/injection_container.dart';
+import 'package:senpai_lib/presentation/home_page.dart';
 
 void main() async{
    initializeDependecies();
@@ -14,9 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: mainTheme,
-      home: AnimeListPage(),
+      home: HomePage(),
     );
   }
 }

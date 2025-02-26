@@ -31,4 +31,33 @@ class AnimeServiceImpl implements AnimeService {
       throw ServerException('Unexpected error: $e');
     }
   }
+
+
+
+    
+@override
+  Future<List<Map<String, dynamic>>> getTopAnime(int page) async {
+    try {
+      final response = await dio.get(
+        '${AppConstants.baseApiUrl}/top/anime?page=$page',
+        options: Options(
+          headers: {AppConstants.contentTypeHeader: AppConstants.jsonContentType},
+
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final json = response.data as Map<String, dynamic>;
+        return List<Map<String, dynamic>>.from(json['data']);
+      } else {
+        throw ServerException(
+          'Failed to load top anime: ${response.statusCode}',
+        );
+      }
+    } on DioException catch (e) {
+      throw ServerException('Error: ${e.message}');
+    } catch (e) {
+      throw ServerException('Error: $e');
+    }
+  }
 }

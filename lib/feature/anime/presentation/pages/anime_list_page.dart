@@ -1,121 +1,166 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:senpai_lib/feature/anime/presentation/blocs/bloc/trending_anime_bloc.dart';
 
-import 'package:senpai_lib/injection_container.dart' as di;
+import 'package:senpai_lib/feature/anime/presentation/blocs/bloc/anime_bloc.dart';
 
-class AnimeListPage extends StatelessWidget {
+
+class AnimeListPage extends StatefulWidget {
+  @override
+  _AnimeListPageState createState() => _AnimeListPageState();
+}
+
+class _AnimeListPageState extends State<AnimeListPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          _scrollController.position.pixels <=
+              _scrollController.position.maxScrollExtent) {
+                print('Reached near end of list, loading more...');
+        context.read<AnimeBloc>().add(LoadMoreTopAnime());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              di.sl<TrendingAnimeBloc>()..add(LoadTrendingAnimeEvent()),
-      child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFF1A1A1A), Color(0xFFC2185B)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
-          title: Text(
-            'Anime Explorer',
-            style: Theme.of(context).appBarTheme.titleTextStyle,
-          ),
-          actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
-        ),
-        body: BlocBuilder<TrendingAnimeBloc, TrendingAnimeState>(
-          builder: (context, state) {
-            if (state is TrendingAnimeLoading) {
-              return Center(child: CircularProgressIndicator());
-            } else if (state is TrendingAnimeLoaded) {
-              return GridView.builder(
-                padding: EdgeInsets.all(16),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.7,
+    return Scaffold(
+      body: BlocBuilder<AnimeBloc, AnimeState>(
+        builder: (context, state) {
+          if (state is AnimeLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is AnimeLoadedState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Горизонтальный список Trending Anime
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Trending Now',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
                 ),
-                itemCount: state.animeList.length,
-                itemBuilder: (context, index) {
-                  final anime = state.animeList[index];
-                  return GestureDetector(
-                    onTap: () {
-                      // Переход на детали (пока заглушка)
+                SizedBox(
+                  height: 150,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.trendAnimeList.length,
+                    itemBuilder: (context, index) {
+                      final anime = state.trendAnimeList[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                anime.imageUrl,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Icon(
+                                  Icons.image,
+                                  size: 100,
+                                  color: Color(0xFF7B1FA2),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            SizedBox(
+                              width: 100,
+                              child: Text(
+                                anime.title,
+                                style: Theme.of(context).textTheme.headlineMedium,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     },
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ClipRRect(
+                  ),
+                ),
+                // Вертикальный список Top Anime с бесконечной прокруткой
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Top Anime',
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: state.topAnime.length + (state.hasMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == state.topAnime.length && state.hasMore) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      final anime = state.topAnime[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        child: ListTile(
+                          leading: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Image.network(
                               anime.imageUrl,
                               width: 60,
                               height: 60,
                               fit: BoxFit.cover,
-                              errorBuilder:
-                                  (context, error, stackTrace) => Icon(
-                                    Icons.image,
-                                    size: 60,
-                                    color: Color(0xFF7B1FA2),
-                                  ),
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                Icons.image,
+                                size: 60,
+                                color: Color(0xFF7B1FA2),
+                              ),
                             ),
                           ),
-                          SizedBox(height: 8),
-                          Text(
+                          title: Text(
                             anime.title,
                             style: Theme.of(context).textTheme.headlineMedium,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 4),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          subtitle: Row(
                             children: [
                               Text(
                                 '★ ${anime.score}',
-                                style: TextStyle(
-                                  color: Color(0xFF7B1FA2),
-                                  fontSize: 12,
-                                ),
+                                style: TextStyle(color: Color(0xFF7B1FA2), fontSize: 12),
                               ),
-                              SizedBox(width: 4),
+                              SizedBox(width: 8),
                               Text(
                                 anime.type,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 4),
-                            child: Icon(
-                              Icons.favorite_border,
-                              color: Color(0xFFC2185B),
-                              size: 20,
-                            ),
+                          trailing: Icon(
+                            Icons.favorite_border,
+                            color: Color(0xFFC2185B),
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            } else if (state is TrendingAnimeError) {
-              return Center(child: Text(state.message));
-            }
-            return Center(child: Text('Press to load anime'));
-          },
-        ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          } else if (state is AnimeError) {
+            return Center(child: Text(state.message));
+          }
+          return Center(child: CircularProgressIndicator(),);
+        },
       ),
     );
   }

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 ThemeData mainTheme = ThemeData(
         // Основные цвета
         primaryColor: Color(0xFFC2185B), // Красный акцент
-        scaffoldBackgroundColor: Color(0xFFF5F5F5), // Светлый фон экрана
+        scaffoldBackgroundColor: Color.fromARGB(255, 186, 38, 92), // Светлый фон экрана
         colorScheme: ColorScheme(
           primary: Color(0xFFC2185B), // Красный
-          secondary: Color(0xFF7B1FA2), // Фиолетовый
+          secondary: Color(0xFF1A1A1A), // Фиолетовый
           surface: Color(0xFFFFFFFF), // Светлый фон
           error: Colors.redAccent,
           onPrimary: Colors.white, // Текст на красном
@@ -32,7 +32,7 @@ ThemeData mainTheme = ThemeData(
 
         // Карточки
         cardTheme: CardTheme(
-          color: Color(0xFFFFFFFF), // Белый фон
+          color: Color.fromARGB(255, 207, 31, 143), // Белый фон
           elevation: 4, // Лёгкая тень
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12), // Закругление
@@ -85,7 +85,7 @@ ThemeData mainTheme = ThemeData(
 
         // Чипы (жанры)
         chipTheme: ChipThemeData(
-          backgroundColor: Color(0xFFC2185B).withOpacity(0.1), // Прозрачный красный
+          backgroundColor: Color.fromARGB(255, 15, 9, 8).withOpacity(0.1), // Прозрачный красный
           labelStyle: TextStyle(
             fontFamily: 'Roboto',
             fontSize: 12,
