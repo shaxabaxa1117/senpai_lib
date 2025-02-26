@@ -12,7 +12,7 @@ part 'anime_event.dart';
 class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
   final GetCurrentlyWatchingAnimeUsecase getCurrentlyWatchingAnime;
   final GetTopAnimeUseCase getTopAnime;
-  bool _isFetching = false;//! контроль запросов 
+
   AnimeBloc({
     required this.getCurrentlyWatchingAnime,
     required this.getTopAnime,
@@ -22,53 +22,43 @@ class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
       try {
         final trendAnimeList = await getCurrentlyWatchingAnime(NoParams());
         final topAnime = await getTopAnime(1);
-        print('Loaded initial data: ${trendAnimeList.length} trending, ${topAnime.length} top');
+        final hasMore = topAnime.length == AppConstants.pageSize;
+        print(
+          'Loaded initial data: ${trendAnimeList.length} trending, ${topAnime.length} top',
+        );
         emit(
           AnimeLoadedState(
             trendAnimeList: trendAnimeList,
             topAnime: topAnime,
             currentPage: 1,
-            hasMore: topAnime.length == AppConstants.pageSize,
+            hasMore: hasMore,
           ),
         );
       } catch (e) {
         emit(AnimeError(e.toString()));
       }
     });
-    on<LoadMoreTopAnime>((event, emit) async {
-      if (state is AnimeLoadedState && !_isFetching) {
+    on<LoadNextTopAnime>((event, emit) async {
+      if (state is AnimeLoadedState) {
         final currentState = state as AnimeLoadedState;
-        if (!currentState.hasMore) {
-          _isFetching = true; //! Блокируем новые запросы
-          print('No more data to load');
-          return;
-        }
-        
-        print('Fetching more top anime, current page: ${currentState.currentPage}');
-
+        emit(AnimeLoading());
         try {
-          //! Добавляем задержку 1 секунда перед запросом
-          await Future.delayed(Duration(seconds: 2));
           final nextPage = currentState.currentPage + 1;
           final newTopAnime = await getTopAnime(nextPage);
-
-          print('Loaded page $nextPage with ${newTopAnime.length} items');
-          
+          final hasMore = newTopAnime.length == AppConstants.pageSize;
+          print('Loaded page $nextPage with ${newTopAnime.length} items, hasMore: $hasMore');
           emit(AnimeLoadedState(
-            trendAnimeList:currentState.trendAnimeList,
-            topAnime: [...currentState.topAnime, ...newTopAnime],
+            trendAnimeList: currentState.trendAnimeList, //! Сохраняем trending
+            topAnime: newTopAnime, //! Заменяем topAnime
             currentPage: nextPage,
-            hasMore: newTopAnime.length == AppConstants.pageSize,
-            
+            hasMore: hasMore,
           ));
         } catch (e) {
+          print('Error loading next top anime: $e');
           emit(AnimeError(e.toString()));
-        }finally{
-          _isFetching = false; //! Разблокируем запросы
         }
-      }else{
-        print('No more data to load');
+        }
       }
-    });
+    );
   }
 }

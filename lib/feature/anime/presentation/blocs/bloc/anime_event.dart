@@ -11,6 +11,6 @@ final class LoadAnimeEvent extends AnimeEvent {
   const LoadAnimeEvent();
 }
 
-class LoadMoreTopAnime extends AnimeEvent {
-  const LoadMoreTopAnime();
+class LoadNextTopAnime extends AnimeEvent {
+  const LoadNextTopAnime();
 }
