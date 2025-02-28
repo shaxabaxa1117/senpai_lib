@@ -14,7 +14,11 @@ class AnimeServiceImpl implements AnimeService {
     try {
       final response = await dio.get(
         AppConstants.currentlyWatchingAnimeUrl,
-        options: Options(headers: {AppConstants.contentTypeHeader: AppConstants.jsonContentType}),
+        options: Options(
+          headers: {AppConstants.contentTypeHeader: AppConstants.jsonContentType},
+          sendTimeout: Duration(seconds: 10), //! Ожидание запроса 10 сек
+          receiveTimeout: Duration(seconds: 10), 
+        ),
       );
 
       if (response.statusCode == 200) {
@@ -32,17 +36,15 @@ class AnimeServiceImpl implements AnimeService {
     }
   }
 
-
-
-    
-@override
+  @override
   Future<List<Map<String, dynamic>>> getTopAnime(int page) async {
     try {
       final response = await dio.get(
         '${AppConstants.baseApiUrl}/top/anime?page=$page',
         options: Options(
           headers: {AppConstants.contentTypeHeader: AppConstants.jsonContentType},
-
+          sendTimeout: Duration(seconds: 12), 
+          receiveTimeout: Duration(seconds: 12),
         ),
       );
 

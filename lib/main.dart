@@ -4,7 +4,7 @@ import 'package:senpai_lib/injection_container.dart';
 import 'package:senpai_lib/presentation/home_page.dart';
 
 void main() async{
-   initializeDependecies();
+  await initializeDependecies();
   runApp(const MyApp());
 }
 

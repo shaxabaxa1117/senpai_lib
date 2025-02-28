@@ -1,63 +1,135 @@
-
 import 'package:flutter/material.dart';
+import 'package:senpai_lib/feature/anime/domain/entity/anime.dart';
+
+
+
 
 class AnimeDetailPage extends StatelessWidget {
+  final AnimeEntity chosenAnime;
+
+  const AnimeDetailPage({ super.key, required this.chosenAnime, });
+
   @override
   Widget build(BuildContext context) {
+
+
+    
     return Scaffold(
-      body: Stack(
-        children: [
-          // Постер
-          Container(
-            height: double.infinity,
-            decoration: BoxDecoration(
-              
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Colors.black54, Colors.transparent],
-              ),
-            ),
-          ),
-          // Кнопка назад и избранное
-          SafeArea(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(icon: Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
-                IconButton(icon: Icon(Icons.favorite_border, color: Colors.white), onPressed: () {}),
-              ],
-            ),
-          ),
-          // Контент
-          Positioned(
-            top: 200,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              padding: EdgeInsets.all(16),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Naruto', style: TextStyle(fontFamily: 'Poppins', fontSize: 24, fontWeight: FontWeight.bold)),
-                    Row(children: [Text('★ 8.5', style: TextStyle(color: Colors.amber)), SizedBox(width: 8), Text('TV • 24 ep')]),
-                    Wrap(spacing: 8, children: [Chip(label: Text('Action')), Chip(label: Text('Adventure'))]),
-                    SizedBox(height: 16),
-                    Text('Description...', style: TextStyle(fontFamily: 'Roboto')),
-                    SizedBox(height: 16),
-                    ElevatedButton(onPressed: () {}, child: Text('Episodes')),
+      backgroundColor: Colors.black,
+      body: CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: [
+          // 🔥 Parallax-изображение
+          SliverAppBar(
+            backgroundColor: Colors.black,
+            expandedHeight: 400,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.only(left: 16, bottom: 16),
+              title: Text(
+                chosenAnime.title,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.7),
+                      blurRadius: 10,
+                    ),
                   ],
                 ),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    chosenAnime.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.2),
+                          Colors.black.withOpacity(0.6),
+                          Colors.black,
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // 📌 Контент страницы
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ⭐ Рейтинг и тип аниме
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber, size: 20),
+                      SizedBox(width: 5),
+                      Text('${chosenAnime.score}', style: TextStyle(color: Colors.white, fontSize: 16)),
+                      SizedBox(width: 10),
+                      Text('${chosenAnime.type} • ${chosenAnime.episodes} эп.', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                    ],
+                  ),
+                  SizedBox(height: 12),
+
+                  // 🎭 Жанры
+                  Wrap(
+                    spacing: 8,
+                    children: chosenAnime.genres
+                        .map((genre) => Chip(
+                              label: Text(genre, style: TextStyle(color: Colors.white)),
+                              backgroundColor: Colors.pinkAccent.withOpacity(0.7),
+                            ))
+                        .toList(),
+                  ),
+                  SizedBox(height: 16),
+
+                  // 📜 Описание
+                  Text(
+                    chosenAnime.synopsis,
+                    style: TextStyle(color: Colors.white70, fontSize: 15, height: 1.5),
+                  ),
+                  SizedBox(height: 20),
+                ],
               ),
             ),
           ),
         ],
+      ),
+
+      // 🔘 Кнопки внизу
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          border: Border(top: BorderSide(color: Colors.white10)),
+        ),
+        child: ElevatedButton(
+          onPressed: () {}, // Добавить в избранное
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.pinkAccent,
+            padding: EdgeInsets.symmetric(vertical: 14),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            elevation: 5,
+          ),
+          child: Text(
+            'Добавить в избранное',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }
