@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "513501194756",
+    "project_id": "senpai-lib",
+    "storage_bucket": "senpai-lib.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513501194756:android:f36e447afc52d0aac12351",
+        "android_client_info": {
+          "package_name": "com.example.senpai_lib"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqyWCspNqrwC7oy8U-R72sUehMgA_hoyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
           flexibleSpace: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF1A1A1A), Color(0xFFC2185B)],
+                colors: [Color(0xFF1A1A1A), Color.fromARGB(255, 155, 21, 75)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
