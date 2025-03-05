@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ThemeData mainTheme = ThemeData(
         // Основные цвета
         primaryColor: Color(0xFFC2185B), // Красный акцент
-        scaffoldBackgroundColor: Color.fromARGB(255, 186, 38, 92), // Светлый фон экрана
+        // scaffoldBackgroundColor: Color.fromARGB(255, 186, 38, 92), // Светлый фон экрана
         colorScheme: ColorScheme(
           primary: Color(0xFFC2185B), // Красный
           secondary: Color(0xFF1A1A1A), // Фиолетовый

@@ -1,5 +1,5 @@
 
-import 'package:senpai_lib/feature/anime/domain/entity/anime.dart';
+import 'package:senpai_lib/feature/anime/domain/entity/anime_enity.dart';
 
 abstract class AnimeRepository {
   Future<List<AnimeEntity>> getCurrentlyWatchingAnime();

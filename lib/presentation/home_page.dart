@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:senpai_lib/feature/anime/presentation/blocs/bloc/anime_bloc.dart';
 
 import 'package:senpai_lib/feature/anime/presentation/pages/anime_list_page.dart';
+import 'package:senpai_lib/feature/auth/presentation/blocs/bloc/auth_bloc.dart';
+import 'package:senpai_lib/feature/auth/presentation/pages/sign_up_page.dart';
+import 'package:senpai_lib/injection_container.dart' as di;
 import 'package:senpai_lib/presentation/temporary_fav_page.dart';
 import 'package:senpai_lib/presentation/temporary_manga_page.dart';
-import 'package:senpai_lib/injection_container.dart' as di;
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,8 +28,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => di.sl<AnimeBloc>()..add(LoadAnimeEvent()),
+      create: (context) => di.sl.get<AnimeBloc>()..add(LoadAnimeEvent()),
       child: Scaffold(
+        drawer: _buildDrawer(context),
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -58,11 +61,77 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Manga'),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xFFC2185B), // Красный акцент
+          selectedItemColor: Color(0xFFC2185B),
           unselectedItemColor: Colors.grey,
-          backgroundColor: Color(0xFF1A1A1A), // Чёрный фон
+          backgroundColor: Color(0xFF1A1A1A),
           onTap: _onItemTapped,
         ),
+      ),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              String nickname = 'Guest';
+              if (state is Authenticated) {
+                nickname = state.user.nickname;
+              }
+              return UserAccountsDrawerHeader(
+                accountName: Text(nickname),
+                accountEmail: null,
+                decoration: BoxDecoration(
+                  color: Color(0xFFC2185B),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Text(
+                    nickname[0].toUpperCase(),
+                    style: TextStyle(fontSize: 40, color: Color(0xFFC2185B)),
+                  ),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.info),
+            title: Text('Info'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.language),
+            title: Text('Localization'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Settings'),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Log Out'),
+            onTap: () {
+              context.read<AuthBloc>().add(SignOutEvent());
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => SignUpPage()),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

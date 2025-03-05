@@ -39,6 +39,7 @@ class AnimeListPage extends StatelessWidget {
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold,
                                   ),
+                                  
                                 )
                                 : null,
                         background: TrendAnimeSwipe(state: state),

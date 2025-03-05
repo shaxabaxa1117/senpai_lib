@@ -9,9 +9,9 @@ sealed class AnimeState extends Equatable {
 
 final class AnimeInitial extends AnimeState {}
 
-class AnimeLoading extends AnimeState {}
+final  class AnimeLoading extends AnimeState {}
 
-class AnimeLoadedState extends AnimeState {
+final  class AnimeLoadedState extends AnimeState {
   final List<AnimeEntity> trendAnimeList;
   final List<AnimeEntity> topAnime;
   final int currentPage;
@@ -25,7 +25,7 @@ class AnimeLoadedState extends AnimeState {
   });
 }
 
-class AnimeError extends AnimeState {
+final  class AnimeError extends AnimeState {
   final String message;
 
   AnimeError(this.message);

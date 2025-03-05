@@ -3,7 +3,7 @@
 import 'package:senpai_lib/core/error/exceptions.dart';
 import 'package:senpai_lib/feature/anime/data/data_sources/anime_data_service.dart';
 import 'package:senpai_lib/feature/anime/data/model/anime_model.dart';
-import 'package:senpai_lib/feature/anime/domain/entity/anime.dart';
+import 'package:senpai_lib/feature/anime/domain/entity/anime_enity.dart';
 import 'package:senpai_lib/feature/anime/domain/repository/anime_repository.dart';
 
 class AnimeRepositoryImpl implements AnimeRepository{ //! тут свзывается domain и data

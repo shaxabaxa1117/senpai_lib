@@ -1,7 +1,7 @@
 
 
 import 'package:senpai_lib/core/usecase/usecase.dart';
-import 'package:senpai_lib/feature/anime/domain/entity/anime.dart';
+import 'package:senpai_lib/feature/anime/domain/entity/anime_enity.dart';
 import 'package:senpai_lib/feature/anime/domain/repository/anime_repository.dart';
 
 class GetTopAnimeUseCase implements UseCase<List<AnimeEntity>, int> {

@@ -1,6 +1,6 @@
 
 
-import 'package:senpai_lib/feature/anime/domain/entity/anime.dart';
+import 'package:senpai_lib/feature/anime/domain/entity/anime_enity.dart';
 //! мы можем получать мдель побольше ноя огранилися тем что мне нужно
 
 
