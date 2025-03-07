@@ -5,25 +5,21 @@ import 'package:senpai_lib/feature/anime/presentation/components/top_anime_grid.
 import 'package:senpai_lib/feature/anime/presentation/components/trend_anime_swipe.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 class AnimeListPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black, // Темный фон для стильности
       body: BlocBuilder<AnimeBloc, AnimeState>(
         builder: (context, state) {
-          
           if (state is AnimeLoading) {
-            return Center(
-              child: _buildLoadingEffect()
-            );
+            return Center(child: _buildLoadingEffect());
           } else if (state is AnimeLoadedState) {
             return NestedScrollView(
               headerSliverBuilder:
                   (context, innerBoxIsScrolled) => [
                     SliverAppBar(
+                      automaticallyImplyLeading: false,
                       backgroundColor: Colors.black,
                       expandedHeight: 320,
                       floating: false,
@@ -39,7 +35,6 @@ class AnimeListPage extends StatelessWidget {
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  
                                 )
                                 : null,
                         background: TrendAnimeSwipe(state: state),
@@ -78,25 +73,22 @@ class AnimeListPage extends StatelessWidget {
                     );
                   }
 
-                 
                   return TopAnimeGrid(state: state, index: index);
-                            },
-                          ),
-                        );
-                      } else if (state is AnimeError) {
-                        return Center(
-                          child: Text(state.message, style: TextStyle(color: Colors.white)),
-                        );
-                      }
-                      return Center(
-                        child:_buildLoadingEffect()
-                      );
-                    },
-                  ),
-                );
-              }
+                },
+              ),
+            );
+          } else if (state is AnimeError) {
+            return Center(
+              child: Text(state.message, style: TextStyle(color: Colors.white)),
+            );
+          }
+          return Center(child: _buildLoadingEffect());
+        },
+      ),
+    );
+  }
 
- Widget _buildLoadingEffect() {
+  Widget _buildLoadingEffect() {
     return Column(
       children: [
         SizedBox(height: 20),
@@ -122,7 +114,6 @@ class AnimeListPage extends StatelessWidget {
             ),
           ),
         ),
-
 
         Expanded(
           child: GridView.builder(
@@ -151,16 +142,4 @@ class AnimeListPage extends StatelessWidget {
       ],
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-            }
-
+}

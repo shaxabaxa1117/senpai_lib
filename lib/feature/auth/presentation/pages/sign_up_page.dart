@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:senpai_lib/feature/auth/presentation/blocs/bloc/auth_bloc.dart';
 import 'package:senpai_lib/feature/auth/presentation/components/custom_text.dart';
+import 'package:senpai_lib/feature/auth/presentation/components/custom_text_field.dart';
 import 'package:senpai_lib/feature/auth/presentation/pages/sign_in_page.dart';
 import 'package:senpai_lib/presentation/home_page.dart';
 
@@ -129,23 +130,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool obscureText = false}) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      style: TextStyle(color: Colors.black),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.black),
-        prefixIcon: Icon(icon, color: Colors.black),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
-}
+    return CustomTextField(controller: controller, label: label, icon: icon, obscureText: obscureText);
+    }
+    }

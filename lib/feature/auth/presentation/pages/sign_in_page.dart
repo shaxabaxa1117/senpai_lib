@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:senpai_lib/feature/auth/presentation/blocs/bloc/auth_bloc.dart';
+import 'package:senpai_lib/feature/auth/presentation/components/custom_text_field.dart';
 import 'package:senpai_lib/feature/auth/presentation/pages/sign_up_page.dart';
 import 'package:senpai_lib/presentation/home_page.dart';
 
@@ -62,6 +63,8 @@ class _SignInPageState extends State<SignInPage> {
                       BlocConsumer<AuthBloc, AuthState>(
                         listener: (context, state) {
                           if (state is Authenticated) {
+
+                            
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (_) => HomePage()),
@@ -121,23 +124,6 @@ class _SignInPageState extends State<SignInPage> {
 
   /// Универсальный метод для создания текстовых полей
   Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool obscureText = false}) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.white70),
-        prefixIcon: Icon(icon, color: Colors.white70),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white70),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
+    return CustomTextField(controller: controller, label: label, icon: icon, obscureText: obscureText);
   }
 }
