@@ -2,23 +2,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:senpai_lib/feature/anime/data/data_sources/anime_data_service.dart';
-import 'package:senpai_lib/feature/anime/data/data_sources/anime_remote_service_impl.dart';
-import 'package:senpai_lib/feature/anime/data/repository/anime_repository_imp.dart';
-import 'package:senpai_lib/feature/anime/domain/repository/anime_repository.dart';
-import 'package:senpai_lib/feature/anime/domain/usecases/get_currently_watching_anime_usecase.dart';
-import 'package:senpai_lib/feature/anime/domain/usecases/get_top_anime_usecase.dart';
-import 'package:senpai_lib/feature/anime/presentation/blocs/bloc/anime_bloc.dart';
-import 'package:senpai_lib/feature/auth/data/data_source/firebase_auth_data_source.dart';
-import 'package:senpai_lib/feature/auth/data/repository/auth_repository_impl.dart';
-import 'package:senpai_lib/feature/auth/domain/repository/auth_repository.dart';
-import 'package:senpai_lib/feature/auth/domain/usecase/get_current_user_usecase.dart';
-import 'package:senpai_lib/feature/auth/domain/usecase/sign_in_usecase.dart';
-import 'package:senpai_lib/feature/auth/domain/usecase/sign_up_usecase.dart';
-import 'package:senpai_lib/feature/auth/domain/usecase/signt_out_usecase.dart';
-import 'package:senpai_lib/feature/auth/presentation/blocs/bloc/auth_bloc.dart';
+import 'package:senpai_lib/core/constants/app_consts.dart';
+import 'package:senpai_lib/features/anime/data/data_sources/anime_data_service.dart';
+import 'package:senpai_lib/features/anime/data/data_sources/anime_remote_service_impl.dart';
+import 'package:senpai_lib/features/anime/data/repository/anime_repository_imp.dart';
+import 'package:senpai_lib/features/anime/domain/repository/anime_repository.dart';
+import 'package:senpai_lib/features/anime/domain/usecases/get_currently_watching_anime_usecase.dart';
+import 'package:senpai_lib/features/anime/domain/usecases/get_top_anime_usecase.dart';
+import 'package:senpai_lib/features/anime/presentation/blocs/bloc/anime_bloc.dart';
+import 'package:senpai_lib/features/auth/data/data_source/firebase_auth_data_source.dart';
+import 'package:senpai_lib/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:senpai_lib/features/auth/domain/repository/auth_repository.dart';
+import 'package:senpai_lib/features/auth/domain/usecase/get_current_user_usecase.dart';
+import 'package:senpai_lib/features/auth/domain/usecase/sign_in_usecase.dart';
+import 'package:senpai_lib/features/auth/domain/usecase/sign_up_usecase.dart';
+import 'package:senpai_lib/features/auth/domain/usecase/signt_out_usecase.dart';
+import 'package:senpai_lib/features/auth/presentation/blocs/bloc/auth_bloc.dart';
+import 'package:senpai_lib/features/manga/data/data_source/manga_remote_data_source.dart';
+import 'package:senpai_lib/features/manga/data/data_source/manga_remote_data_source_impl.dart';
+import 'package:senpai_lib/features/manga/data/repository/manga_repository_impl.dart';
+import 'package:senpai_lib/features/manga/domain/repository/manga_repository.dart';
+import 'package:senpai_lib/features/manga/domain/usecases/get_top_manga_usecase.dart';
+import 'package:senpai_lib/features/manga/presentation/blocs/bloc/manga_bloc.dart';
 
-//! все прееприлтает тут
+//! все прееприлтается тут
 final sl = GetIt.instance;
 
 Future<void> initializeDependecies() async {
@@ -54,7 +61,7 @@ Future<void> initializeDependecies() async {
     () =>
         Dio()
           ..options = BaseOptions(
-            connectTimeout: Duration(seconds: 5),
+            connectTimeout: Duration(seconds: 10),
             receiveTimeout: Duration(seconds: 10),
           ),
   );
@@ -94,4 +101,28 @@ Future<void> initializeDependecies() async {
       getCurrentUser: sl.get<GetCurrentUserUseCase>(),
     ),
   );
+
+  //! MANGA
+
+
+  // Data Sources
+  sl.registerLazySingleton<MangaRemoteDataSource>(
+    () => MangaRemoteDataSourceImpl(dio: sl<Dio>()),
+  );
+
+  // Repositories
+  sl.registerLazySingleton<MangaRepository>(
+    () => MangaRepositoryImpl(sl<MangaRemoteDataSource>()),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton<GetTopMangaUseCase>(
+    () => GetTopMangaUseCase(sl<MangaRepository>()),
+  );
+
+  // Blocs
+  sl.registerFactory<MangaBloc>(
+    () => MangaBloc(getTopManga: sl<GetTopMangaUseCase>()),
+  );
+  
 }

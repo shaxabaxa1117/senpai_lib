@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:senpai_lib/config/theme/main_theme.dart';
 import 'package:senpai_lib/core/constants/firebase_options.dart';
-import 'package:senpai_lib/feature/auth/presentation/blocs/bloc/auth_bloc.dart';
-import 'package:senpai_lib/feature/auth/presentation/pages/auth_wrapper.dart';
+import 'package:senpai_lib/features/anime/presentation/blocs/bloc/anime_bloc.dart';
+import 'package:senpai_lib/features/auth/presentation/blocs/bloc/auth_bloc.dart';
+import 'package:senpai_lib/features/auth/presentation/pages/auth_wrapper.dart';
+import 'package:senpai_lib/features/manga/presentation/blocs/bloc/manga_bloc.dart';
 import 'package:senpai_lib/injection_container.dart';
 import 'package:senpai_lib/injection_container.dart' as di;
 
@@ -21,8 +23,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => di.sl.get<AuthBloc>()..add(CheckAuthEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => di.sl.get<AuthBloc>()..add(CheckAuthEvent()),
+        ),
+       BlocProvider(create: (context) => di.sl.get<AnimeBloc>()),
+        BlocProvider(create: (context) => di.sl.get<MangaBloc>()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
