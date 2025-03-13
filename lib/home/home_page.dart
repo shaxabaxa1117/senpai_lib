@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
     if (index == 0) {
       context.read<AnimeBloc>().add(LoadAnimeEvent());
     } else if (index == 2) {
-      context.read<MangaBloc>().add(GetTopMangaEvent());
+      context.read<MangaBloc>().add(LoadMangaEvent());
     }
   }
 

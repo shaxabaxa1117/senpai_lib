@@ -7,4 +7,5 @@ sealed class MangaEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetTopMangaEvent extends MangaEvent {}
+final class LoadMangaEvent extends MangaEvent {}
+final class LoadNextTopManga extends MangaEvent {}

@@ -1,14 +1,15 @@
-import 'package:senpai_lib/core/usecase/no_params.dart';
+
 import 'package:senpai_lib/core/usecase/usecase.dart';
 import 'package:senpai_lib/features/manga/domain/entity/manga_enity.dart';
 import 'package:senpai_lib/features/manga/domain/repository/manga_repository.dart';
 
-class GetTopMangaUseCase extends UseCase<List<MangaEntity>, NoParams> {
-  final MangaRepository _repository;
-  GetTopMangaUseCase(this._repository);
+class GetTopMangaUseCase implements UseCase<List<MangaEntity>, int> {
+  final MangaRepository repository;
+
+  GetTopMangaUseCase(this.repository);
 
   @override
-  Future<List<MangaEntity>> call(NoParams params) async {
-    return await _repository.getTopManga();
+  Future<List<MangaEntity>> call(int page) async {
+    return await repository.getTopManga(page);
   }
 }

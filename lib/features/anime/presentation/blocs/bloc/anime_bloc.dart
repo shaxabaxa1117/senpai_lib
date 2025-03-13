@@ -60,6 +60,7 @@ class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
             hasMore: hasMore,
           ));
         } catch (e) {
+          
           print('Error loading next top anime: $e');
           emit(AnimeError(e.toString()));
         }

@@ -6,10 +6,12 @@ import 'package:senpai_lib/features/anime/presentation/components/trend_anime_sw
 import 'package:shimmer/shimmer.dart';
 
 class AnimeListPage extends StatelessWidget {
+  const AnimeListPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Темный фон для стильности
+      backgroundColor: Colors.black, 
       body: BlocBuilder<AnimeBloc, AnimeState>(
         builder: (context, state) {
           if (state is AnimeLoading) {

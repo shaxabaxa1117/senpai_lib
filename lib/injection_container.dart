@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
-import 'package:senpai_lib/core/constants/app_consts.dart';
 import 'package:senpai_lib/features/anime/data/data_sources/anime_data_service.dart';
 import 'package:senpai_lib/features/anime/data/data_sources/anime_remote_service_impl.dart';
 import 'package:senpai_lib/features/anime/data/repository/anime_repository_imp.dart';
@@ -18,8 +17,8 @@ import 'package:senpai_lib/features/auth/domain/usecase/sign_in_usecase.dart';
 import 'package:senpai_lib/features/auth/domain/usecase/sign_up_usecase.dart';
 import 'package:senpai_lib/features/auth/domain/usecase/signt_out_usecase.dart';
 import 'package:senpai_lib/features/auth/presentation/blocs/bloc/auth_bloc.dart';
-import 'package:senpai_lib/features/manga/data/data_source/manga_remote_data_source.dart';
-import 'package:senpai_lib/features/manga/data/data_source/manga_remote_data_source_impl.dart';
+import 'package:senpai_lib/features/manga/data/data_source/manga_service.dart';
+import 'package:senpai_lib/features/manga/data/data_source/manga_service_impl.dart';
 import 'package:senpai_lib/features/manga/data/repository/manga_repository_impl.dart';
 import 'package:senpai_lib/features/manga/domain/repository/manga_repository.dart';
 import 'package:senpai_lib/features/manga/domain/usecases/get_top_manga_usecase.dart';
@@ -104,23 +103,23 @@ Future<void> initializeDependecies() async {
 
   //! MANGA
 
-
-  // Data Sources
-  sl.registerLazySingleton<MangaRemoteDataSource>(
-    () => MangaRemoteDataSourceImpl(dio: sl<Dio>()),
+  //! Data Sources
+  sl.registerLazySingleton<MangaService>(
+    () => MangaServiceImpl(dio: sl<Dio>(
+    )),
   );
 
-  // Repositories
+  //! Repositories
   sl.registerLazySingleton<MangaRepository>(
-    () => MangaRepositoryImpl(sl<MangaRemoteDataSource>()),
+    () => MangaRepositoryImpl(sl<MangaService>()),
   );
 
-  // Use Cases
+  //! Use Cases
   sl.registerLazySingleton<GetTopMangaUseCase>(
     () => GetTopMangaUseCase(sl<MangaRepository>()),
   );
 
-  // Blocs
+  //! Blocs
   sl.registerFactory<MangaBloc>(
     () => MangaBloc(getTopManga: sl<GetTopMangaUseCase>()),
   );
